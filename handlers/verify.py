@@ -12,11 +12,11 @@ async def verify_callback(callback: types.CallbackQuery, bot):
     ok = await check_all_membership(bot, user_id)
     if not ok:
         return await callback.message.edit_text(
-            "❌ <b>You haven’t joined all required channels.</b>\nJoin all and tap again.",
+            "❌ <b>You still haven’t joined all channels.</b>\nPlease join and tap again.",
             reply_markup=verify_buttons()
         )
 
     await callback.message.edit_text(
-        "✅ <b>Verification successful!</b>\nChoose a tool below:",
+        "✅ <b>Verification Complete!</b>\nChoose a tool below:",
         reply_markup=start_menu()
     )

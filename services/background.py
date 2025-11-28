@@ -1,6 +1,8 @@
-from rembg import remove
 from io import BytesIO
+from rembg import remove
 
-def remove_background(image_bytes: bytes) -> BytesIO:
-    output = remove(image_bytes)
-    return BytesIO(output)
+def remove_background(img_bytes):
+    output = remove(img_bytes)
+    buf = BytesIO(output)
+    buf.seek(0)
+    return buf

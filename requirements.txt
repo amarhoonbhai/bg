@@ -1,6 +1,6 @@
 aiogram==3.3.0
 Pillow==10.2.0
-opencv-python==4.8.1.78
 numpy==1.26.4
+opencv-python-headless==4.8.1.78
 rembg==2.0.53
-scikit-image==0.25.2
+pytz==2023.3

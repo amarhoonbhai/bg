@@ -1,32 +1,31 @@
 from io import BytesIO
-import cv2
-import numpy as np
 from PIL import Image
-from realesrgan import RealESRGAN
-
-model_loaded = None
-
-def load_model():
-    global model_loaded
-    if model_loaded is None:
-        from realesrgan import RealESRGAN
-        import torch
-        device = 'cpu'
-        model_loaded = RealESRGAN(device, scale=4)
-        model_loaded.load_weights('RealESRGAN_x4.pth', download=True)
-    return model_loaded
-
+import numpy as np
+import cv2
+from skimage import restoration
 
 def upscale_image(image_bytes: bytes) -> BytesIO:
-    model = load_model()
-
+    # Load image
     img = Image.open(BytesIO(image_bytes)).convert("RGB")
     img_np = np.array(img)
 
-    upscaled = model.predict(img_np)
-    upscaled_img = Image.fromarray(upscaled)
+    # 2x upscale using OpenCV
+    upscaled = cv2.resize(img_np, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+
+    # Light bilateral denoise
+    denoised = restoration.denoise_bilateral(
+        upscaled,
+        sigma_color=0.05,
+        sigma_spatial=15,
+        channel_axis=-1
+    )
+
+    denoised_uint8 = (denoised * 255).astype(np.uint8)
+
+    final_image = Image.fromarray(denoised_uint8)
 
     buf = BytesIO()
-    upscaled_img.save(buf, format='PNG')
+    final_image.save(buf, format="PNG")
     buf.seek(0)
+
     return buf

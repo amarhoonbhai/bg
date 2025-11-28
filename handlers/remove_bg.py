@@ -1,4 +1,4 @@
-from aiogram import Router, types
+from aiogram import Router, types, F
 from utils.check_member import check_all_membership
 from utils.database import increment_stat
 from services.background import remove_background

@@ -1,31 +1,39 @@
-from io import BytesIO
-from PIL import Image
-import numpy as np
-import cv2
-from skimage import restoration
+from aiogram import Router, types, F
+from utils.check_member import check_all_membership
+from utils.database import increment_stat
+from services.enhance import upscale_image
+from utils.buttons import verify_buttons
 
-def upscale_image(image_bytes: bytes) -> BytesIO:
-    # Open image
-    img = Image.open(BytesIO(image_bytes)).convert("RGB")
-    img_np = np.array(img)
+router = Router()   # <-- REQUIRED (this is missing in your file)
 
-    # 2X upscale using OpenCV
-    upscale = cv2.resize(img_np, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+@router.message(F.photo)
+async def enhance_handler(message: types.Message, bot):
+    # Check if user selected Enhance option
+    if getattr(bot, "user_action", None) != "enhance_hd":
+        return
 
-    # Light denoise using skimage
-    denoise = restoration.denoise_bilateral(
-        upscale,
-        sigma_color=0.05,
-        sigma_spatial=15,
-        channel_axis=-1
+    user_id = message.from_user.id
+
+    # Membership check
+    ok = await check_all_membership(bot, user_id)
+    if not ok:
+        return await message.answer(
+            "🔐 Join all required channels first.",
+            reply_markup=verify_buttons()
+        )
+
+    # Download file
+    file = await bot.get_file(message.photo[-1].file_id)
+    img_bytes = await bot.download_file(file.file_path)
+
+    # Enhance using LITE upscaler
+    output = upscale_image(img_bytes.read())
+
+    # Update stats
+    increment_stat("enhance")
+
+    # Send result
+    await message.answer_photo(
+        output,
+        caption="✨ HD Enhanced!"
     )
-
-    denoise_uint8 = (denoise * 255).astype(np.uint8)
-
-    final = Image.fromarray(denoise_uint8)
-
-    buf = BytesIO()
-    final.save(buf, format="PNG")
-    buf.seek(0)
-
-    return buf

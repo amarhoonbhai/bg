@@ -6,7 +6,7 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
-    # Users DB
+    # Users table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
@@ -14,7 +14,7 @@ def init_db():
         )
     """)
 
-    # Stats Table
+    # Stats table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS stats (
             id INTEGER PRIMARY KEY,
@@ -47,8 +47,47 @@ def get_all_users():
     return users
 
 
-# ---- STATS FUNCTIONS ---- #
+# -------- Stats System -------- #
 
 def increment_stat(column: str):
-    """column must be: bg / enhance / dp / face"""
-    conn = sqli
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(f"INSERT INTO stats ({column}) VALUES (1)")
+    conn.commit()
+    conn.close()
+
+
+def get_total_stats():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT SUM(bg), SUM(enhance), SUM(dp), SUM(face) FROM stats")
+    row = cur.fetchone()
+    conn.close()
+
+    return {
+        "bg": row[0] or 0,
+        "enhance": row[1] or 0,
+        "dp": row[2] or 0,
+        "face": row[3] or 0
+    }
+
+
+def get_last_24h_stats():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT SUM(bg), SUM(enhance), SUM(dp), SUM(face)
+        FROM stats
+        WHERE timestamp >= datetime('now', '-1 day')
+    """)
+
+    row = cur.fetchone()
+    conn.close()
+
+    return {
+        "bg": row[0] or 0,
+        "enhance": row[1] or 0,
+        "dp": row[2] or 0,
+        "face": row[3] or 0
+    }

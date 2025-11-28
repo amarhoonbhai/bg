@@ -4,6 +4,7 @@ from utils.database import total_users, total_processed
 
 router = Router()
 
+
 @router.message(Command("stats"))
 async def stats_cmd(message: types.Message):
     await message.answer(

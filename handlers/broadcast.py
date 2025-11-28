@@ -1,11 +1,11 @@
 from aiogram import Router, types
+from aiogram.filters import Command
 from utils.decorators import admin_only
 from utils.database import get_all_users
 
 router = Router()
 
-
-@router.message(commands={"broadcast"})
+@router.message(Command("broadcast"))
 @admin_only
 async def ask_broadcast(message: types.Message):
     await message.answer("📢 Send the broadcast message (text/photo/video):")
@@ -29,4 +29,4 @@ async def do_broadcast(message: types.Message, bot):
         except:
             pass
 
-    await message.answer(f"📣 Broadcast sent to <b>{sent}</b> users.")
+    await message.answer(f"📣 Broadcast sent to {sent} users.")

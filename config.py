@@ -2,7 +2,7 @@
 #        BOT CONFIG
 # ============================
 
-BOT_TOKEN = "8580026385:AAGyKt9Rvcrhd9sgR92AU4RjY5PsPGot7-w"
+BOT_TOKEN ="8580026385:AAHZtWUt1ItIIZ1XKwZPLOSmkHVyWZcEO5g"
 
 # Required channels
 REQUIRED_CHANNELS = [

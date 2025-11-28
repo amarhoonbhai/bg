@@ -1,36 +1,38 @@
 from aiogram import Router, types
-from utils.buttons import main_menu, help_menu
+from utils.buttons import main_menu, back_button
 
 router = Router()
 
+
 @router.callback_query()
-async def menu_handler(call: types.CallbackQuery):
-    bot = call.bot
+async def menu_handler(call: types.CallbackQuery, bot):
     data = call.data
 
-    if data == "bg":
+    if data == "mode_bg":
         bot.user_mode = "bg"
-        return await call.message.answer("🧼 <b>Send a photo to remove background.</b>")
+        return await call.message.edit_text("🧼 <b>Send a photo to remove background.</b>")
 
-    if data == "cutout":
+    if data == "mode_cutout":
         bot.user_mode = "cutout"
-        return await call.message.answer("✂️ <b>Send a photo for smart cut-out.</b>")
+        return await call.message.edit_text("✂️ <b>Send a photo for smart cut-out.</b>")
 
-    if data == "help":
-        return await call.message.answer(
-            "<b>🆘 Help Menu</b>\n\n"
-            "🧼 Remove BG → Removes background from images\n"
-            "✂️ Cut-Out → Smart object extraction\n"
-            "📊 Stats → Your usage details\n\n"
-            "Send a photo after choosing a tool.",
-            reply_markup=help_menu()
-        )
+    if data == "show_help":
+        help_text = """
+<b>🆘 Help Menu</b>
 
-    if data == "back":
-        return await call.message.answer("⬅️ Back to menu", reply_markup=main_menu())
+🧼 <b>Remove BG</b> → Removes background from images  
+✂️ <b>Cut-Out</b> → Extracts object smartly  
+📊 <b>Stats</b> → View bot usage  
 
-    if data == "stats":
+Send an image after selecting a tool.
+"""
+        return await call.message.edit_text(help_text, reply_markup=back_button())
+
+    if data == "back_to_menu":
+        return await call.message.edit_text("⬅️ Back to menu", reply_markup=main_menu())
+
+    if data == "show_stats":
         return await call.message.answer("/stats")
 
-    if data == "verify":
+    if data == "verify_join":
         return await call.message.answer("/start")

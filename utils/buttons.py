@@ -3,17 +3,17 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 def ios_button(text, callback):
     return InlineKeyboardButton(
-        text=f"  {text}  ",  # padded for iOS style
+        text=f"  {text}  ",  # iOS rounded padding
         callback_data=callback
     )
 
 
 def start_menu():
     kb = [
-        [ios_button("🧼 Remove BG", "remove_bg")],
-        [ios_button("✨ Enhance HD", "enhance_hd")],
+        [ios_button("🧼 Remove Background", "remove_bg")],
+        [ios_button("✨ Enhance HD (4x)", "enhance_hd")],
         [ios_button("📸 Auto DP Crop", "dp_crop")],
-        [ios_button("🧹 Clean Face", "clean_face")],
+        [ios_button("🧹 Face Restore", "clean_face")],
         [
             ios_button("📑 Help", "help"),
             ios_button("📈 Stats", "stats")

@@ -1,11 +1,18 @@
-BOT_TOKEN = "8580026385:AAEpAv7n7gaZklnL-ctU3TZsXurdHXVmA0Q"
+# ============================
+#        BOT CONFIG
+# ============================
 
+BOT_TOKEN = "8580026385:AAGyKt9Rvcrhd9sgR92AU4RjY5PsPGot7-w"
+
+# Required channels
 REQUIRED_CHANNELS = [
     "@philobots",
     "@thetrafficzone",
     "@claimback"
 ]
 
-REQUIRED_GC = ["https://t.me/+X83tuZcK0FkwZWY1"]
+# Required group
+REQUIRED_GROUP = "-1002424072993"  # Your GC ID (not link)
 
-ADMIN_IDS = [5365568568]  # YOUR ADMIN ID
+# Admins
+ADMIN_IDS = [5365568568]  # Add more if needed

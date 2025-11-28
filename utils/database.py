@@ -1,8 +1,10 @@
 import sqlite3
 
-con = sqlite3.connect("bot.db")
+# Create or connect database
+con = sqlite3.connect("bot.db", check_same_thread=False)
 cur = con.cursor()
 
+# Create table
 cur.execute("""
 CREATE TABLE IF NOT EXISTS users(
     user_id INTEGER PRIMARY KEY,
@@ -11,19 +13,31 @@ CREATE TABLE IF NOT EXISTS users(
 """)
 con.commit()
 
-def add_user(user_id: int):
-    cur.execute("INSERT OR IGNORE INTO users(user_id) VALUES(?)", (user_id,))
+
+# Add user to database
+def add_user(uid: int):
+    cur.execute("INSERT OR IGNORE INTO users(user_id) VALUES(?)", (uid,))
     con.commit()
 
-def increment(user_id: int):
-    cur.execute("UPDATE users SET processed = processed + 1 WHERE user_id=?", (user_id,))
+
+# Increment image processing count
+def increment(uid: int):
+    cur.execute("UPDATE users SET processed = processed + 1 WHERE user_id=?", (uid,))
     con.commit()
 
+
+# Total users
 def total_users():
-    return cur.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    row = cur.execute("SELECT COUNT(*) FROM users").fetchone()
+    return row[0]
 
+
+# Total processed images
 def total_processed():
-    return cur.execute("SELECT SUM(processed) FROM users").fetchone()[0] or 0
+    row = cur.execute("SELECT SUM(processed) FROM users").fetchone()
+    return row[0] if row[0] else 0
 
+
+# Fetch all user IDs (for broadcast)
 def all_users():
     return cur.execute("SELECT user_id FROM users").fetchall()

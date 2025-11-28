@@ -1,33 +1,23 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def ios_button(text, callback):
-    return InlineKeyboardButton(
-        text=f"  {text}  ",  # iOS rounded padding
-        callback_data=callback
-    )
+def main_menu():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="🧼 Remove BG", callback_data="bg")
+    kb.button(text="✂️ Cut-Out", callback_data="cutout")
+    kb.button(text="ℹ️ Help", callback_data="help")
+    kb.button(text="📊 Stats", callback_data="stats")
+    kb.adjust(2)
+    return kb.as_markup()
 
 
-def start_menu():
-    kb = [
-        [ios_button("🧼 Remove Background", "remove_bg")],
-        [ios_button("✨ Enhance HD (4x)", "enhance_hd")],
-        [ios_button("📸 Auto DP Crop", "dp_crop")],
-        [ios_button("🧹 Face Restore", "clean_face")],
-        [
-            ios_button("📑 Help", "help"),
-            ios_button("📈 Stats", "stats")
-        ]
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=kb)
+def verify_button():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="✅ I Joined", callback_data="verify")
+    return kb.as_markup()
 
 
-def verify_buttons():
-    kb = [
-        [InlineKeyboardButton("📌 Join @PhiloBots", url="https://t.me/PhiloBots")],
-        [InlineKeyboardButton("📌 Join @TheTrafficZone", url="https://t.me/TheTrafficZone")],
-        [InlineKeyboardButton("📌 Join @ClaimBack", url="https://t.me/ClaimBack")],
-        [InlineKeyboardButton("📌 Join Group Chat", url="https://t.me/+X83tuZcK0FkwZWY1")],
-        [ios_button("🔁 I Joined", "check_verify")]
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=kb)
+def help_menu():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="⬅️ Back", callback_data="back")
+    return kb.as_markup()

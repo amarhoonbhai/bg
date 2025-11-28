@@ -1,15 +1,11 @@
-BOT_TOKEN = "8580026385:AAEi71Cl_6gQPWcGFyKByqZFCYisudyMyxo"
+BOT_TOKEN = "PUT-YOUR-BOT-TOKEN"
 
-ADMIN_ID = -5365568568
-
-# Required Channels
 REQUIRED_CHANNELS = [
-    "@PhiloBots",
-    "@TheTrafficZone",
-    "@ClaimBack"
+    "@philobots",
+    "@thetrafficzone",
+    "@claimback"
 ]
 
-# Required Group Invite Link or Username
-REQUIRED_GROUP = "https://t.me/+X83tuZcK0FkwZWY1"
+REQUIRED_GC = ["https://t.me/+X83tuZcK0FkwZWY1"]
 
-DB_PATH = "users.db"
+ADMIN_IDS = [5365568568]  # YOUR ADMIN ID

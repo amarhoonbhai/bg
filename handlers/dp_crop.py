@@ -1,4 +1,4 @@
-from aiogram import Router, types
+from aiogram import Router, types, F
 from utils.check_member import check_all_membership
 from utils.database import increment_stat
 from services.dp_crop import auto_crop_dp
@@ -6,15 +6,14 @@ from utils.buttons import verify_buttons
 
 router = Router()
 
-
-@router.message(lambda m: m.photo)
+@router.message(F.photo)
 async def dp_crop_handler(message: types.Message, bot):
-    action = getattr(bot, "user_action", None)
-    if action != "dp_crop":
+    if getattr(bot, "user_action", None) != "dp_crop":
         return
 
     user_id = message.from_user.id
     ok = await check_all_membership(bot, user_id)
+
     if not ok:
         return await message.answer("🔐 Join channels first.", reply_markup=verify_buttons())
 
@@ -24,4 +23,4 @@ async def dp_crop_handler(message: types.Message, bot):
     output = auto_crop_dp(img_bytes.read())
     increment_stat("dp")
 
-    await message.answer_photo(output, caption="📸 <b>DP Cropped (AI Face Focus)!</b>")
+    await message.answer_photo(output, caption="📸 DP cropped!")

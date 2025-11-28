@@ -8,6 +8,7 @@ import pytz
 
 router = Router()
 
+
 def time_greet():
     ist = pytz.timezone("Asia/Kolkata")
     hour = datetime.now(ist).hour
@@ -25,12 +26,11 @@ def time_greet():
 @router.message(Command("start"))
 async def start_cmd(message: types.Message, bot):
     user = message.from_user
-    first = user.first_name or ""
-    last = user.last_name or ""
 
-    name = first + (" " + last if last else "")
+    full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
     add_user(user.id)
 
+    # membership check
     ok = await check_all_membership(bot, user.id)
     if not ok:
         return await message.answer(
@@ -38,7 +38,7 @@ async def start_cmd(message: types.Message, bot):
             reply_markup=verify_button()
         )
 
-    # Fetch profile picture
+    # fetch DP
     dp = None
     try:
         photos = await bot.get_user_profile_photos(user.id)
@@ -49,19 +49,19 @@ async def start_cmd(message: types.Message, bot):
 
     greet = time_greet()
 
-    welcome_msg = f"""
-{greet}, <b>{name}</b>! 👋
+    welcome_text = f"""
+{greet}, <b>{full_name}</b>! 👋
 
 ✨ Welcome to <b>Instant BG Remover Bot</b>
 
 🧼 Remove Background  
 ✂️ Smart Cut-Out  
-⏱ Fast, Clean & Professional  
+⚡ Fast • Clean • Professional  
 
-Choose a tool below to get started.
+Choose a tool below:
 """
 
     if dp:
-        await message.answer_photo(dp, caption=welcome_msg, reply_markup=main_menu())
+        await message.answer_photo(dp, caption=welcome_text, reply_markup=main_menu())
     else:
-        await message.answer(welcome_msg, reply_markup=main_menu())
+        await message.answer(welcome_text, reply_markup=main_menu())

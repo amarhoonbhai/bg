@@ -1,15 +1,18 @@
 from aiogram import Router, types, F
+from utils.check_member import check_all_membership
 from services.cutout import do_cutout
 from utils.database import increment
-from utils.check_member import check_all_membership
 
 router = Router()
 
+
 @router.message(F.photo)
 async def cutout_handler(message: types.Message, bot):
+    # check mode
     if getattr(bot, "user_mode", None) != "cutout":
         return
 
+    # membership check
     if not await check_all_membership(bot, message.from_user.id):
         return await message.answer("❌ You must join required channels.")
 

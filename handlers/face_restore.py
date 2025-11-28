@@ -17,7 +17,7 @@ async def face_fix_handler(message: types.Message, bot):
     if not ok:
         return await message.answer("🔐 Join all channels.", reply_markup=verify_buttons())
 
-    file = await bot.get_file(message.photo[-1].file_id)
+    file = await bot.get_file(message.photo[-1].file.file_id)
     img_bytes = await bot.download_file(file.file_path)
 
     output = restore_face(img_bytes.read())
